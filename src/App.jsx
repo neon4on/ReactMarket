@@ -9,7 +9,6 @@ import Register from './components/auth/Register';
 import Login from './components/auth/Login';
 import ProductList from './pages/ProductList';
 import ProductDetails from './pages/ProductDetails';
-// import Cart from './pages/Cart';
 import OrderHistory from './pages/OrderHistory';
 import AdminDashboard from './pages/AdminDashboard';
 import Cart from './components/Cart';

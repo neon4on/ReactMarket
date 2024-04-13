@@ -1,23 +1,35 @@
 const express = require('express');
 const router = express.Router();
+const db = require('../config/db');
 
-// Временное хранилище корзины (в реальном приложении используйте базу данных)
 const cartItems = [];
 
-// Получение содержимого корзины
 router.get('/', (req, res) => {
   res.json(cartItems);
 });
 
-// Добавление товара в корзину
-router.post('/', (req, res) => {
-  const { id, name, price, quantity } = req.body;
-  const item = { id, name, price, quantity };
-  cartItems.push(item);
-  res.status(201).json(item);
+router.post('/', async (req, res) => {
+  try {
+    const { productId, quantity } = req.body;
+    const { rows } = await db.query('SELECT * FROM products WHERE id = $1', [productId]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'Товар не найден' });
+    }
+    const product = rows[0];
+    const item = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: quantity || 1,
+    };
+    cartItems.push(item);
+    res.status(201).json(item);
+  } catch (error) {
+    console.error('Ошибка при добавлении товара в корзину:', error);
+    res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+  }
 });
 
-// Удаление товара из корзины
 router.delete('/:id', (req, res) => {
   const itemId = parseInt(req.params.id);
   const index = cartItems.findIndex((item) => item.id === itemId);

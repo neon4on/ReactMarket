@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
-import products from '../mockData/products';
 
 const ProductListContainer = styled.div`
   padding: 20px;
@@ -26,15 +26,45 @@ const ProductPrice = styled.p`
   font-weight: bold;
 `;
 
+const AddToCartButton = styled.button`
+  /* Стили для кнопки "Добавить в корзину" */
+`;
+
 const ProductList = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get('/api/products');
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Ошибка при получении списка товаров:', error);
+    }
+  };
+
+  const addToCart = async (productId, quantity) => {
+    try {
+      await axios.post('/api/cart', { productId, quantity });
+    } catch (error) {
+      console.error('Ошибка при добавлении товара в корзину:', error);
+    }
+  };
+
   return (
     <ProductListContainer>
       <h2>Список товаров</h2>
       {products.map((product) => (
         <ProductCard key={product.id}>
-          <ProductTitle>{product.name}</ProductTitle>
-          <ProductPrice>${product.price}</ProductPrice>
-          {/* Дополнительная информация о товаре */}
+          <h3>{product.name}</h3>
+          <p>{product.description}</p>
+          <p>Цена: {product.price} руб.</p>
+          <AddToCartButton onClick={() => addToCart(product.id)}>
+            Добавить в корзину
+          </AddToCartButton>
         </ProductCard>
       ))}
     </ProductListContainer>

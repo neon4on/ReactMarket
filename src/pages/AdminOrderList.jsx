@@ -20,7 +20,6 @@ const AdminOrderList = () => {
   const updateOrderStatus = async (orderId, status) => {
     try {
       await axios.put(`/api/orders/${orderId}`, { status });
-      // Обновление списка заказов после успешного обновления статуса
     } catch (error) {
       console.error('Ошибка при обновлении статуса заказа:', error);
     }

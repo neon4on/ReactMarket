@@ -57,13 +57,11 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    // Загрузка содержимого корзины с сервера
     fetchCartItems();
   }, []);
 
   const fetchCartItems = async () => {
     try {
-      // Выполнение запроса к серверу для получения содержимого корзины
       const response = await axios.get('/api/cart');
       setCartItems(response.data);
     } catch (error) {
@@ -73,9 +71,7 @@ const Cart = () => {
 
   const removeFromCart = async (itemId) => {
     try {
-      // Выполнение запроса к серверу для удаления товара из корзины
       await axios.delete(`/api/cart/${itemId}`);
-      // Обновление состояния корзины после удаления товара
       setCartItems(cartItems.filter((item) => item.id !== itemId));
     } catch (error) {
       console.error('Ошибка при удалении товара из корзины:', error);
@@ -83,7 +79,6 @@ const Cart = () => {
   };
 
   const calculateTotal = () => {
-    // Расчет общей стоимости товаров в корзине
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
@@ -96,14 +91,14 @@ const Cart = () => {
         <>
           {cartItems.map((item) => (
             <CartItem key={item.id}>
-              <span>{item.name}</span>
-              <span>Количество: {item.quantity}</span>
-              <span>Цена: {item.price} руб.</span>
-              <button onClick={() => removeFromCart(item.id)}>Удалить</button>
+              <CartItemName>{item.name}</CartItemName>
+              <CartItemQuantity>Количество: {item.quantity}</CartItemQuantity>
+              <CartItemPrice>Цена: {item.price} руб.</CartItemPrice>
+              <CartItemRemove onClick={() => removeFromCart(item.id)}>Удалить</CartItemRemove>
             </CartItem>
           ))}
           <CartTotal>
-            <strong>Общая стоимость:</strong> {calculateTotal()} руб.
+            <strong>Общая стоимость:</strong> {calculateTotal().toFixed(2)} руб.
           </CartTotal>
         </>
       )}

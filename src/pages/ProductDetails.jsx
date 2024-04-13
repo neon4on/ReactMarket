@@ -22,7 +22,6 @@ const ProductDetails = () => {
   const addToCart = async () => {
     try {
       await axios.post('/api/cart', { productId: id });
-      // Обработка успешного добавления в корзину
     } catch (error) {
       console.error('Ошибка при добавлении товара в корзину:', error);
     }

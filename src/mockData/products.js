@@ -13,7 +13,6 @@ const products = [
     price: 19.99,
     imageUrl: 'https://example.com/product2.jpg',
   },
-  // Добавьте больше товаров при необходимости
 ];
 
 export default products;
